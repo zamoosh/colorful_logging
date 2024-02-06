@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='your-library',
-    version='0.1',
+    name='colorful_logging',
+    version='0.2',
     packages=find_packages(),
     install_requires=[],
 )
