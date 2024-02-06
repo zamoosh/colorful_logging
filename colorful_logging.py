@@ -1,4 +1,4 @@
-from inspect import currentframe
+from inspect import currentframe, stack
 import logging
 import datetime
 import sys
@@ -38,7 +38,7 @@ BOLD_FONT = '\033[97m'
 class ColorfulLogging(logging.Formatter):
     FORMAT = "%(levelname) -10s %(asctime)s %(module)s:%(lineno)s, func: '%(funcName)s', msg: '%(message)s'"
     DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
-    
+
     FORMATS = {
         logging.CRITICAL: RED + FORMAT + RESET,
         logging.FATAL: RED + FORMAT + RESET,
@@ -54,7 +54,7 @@ class ColorfulLogging(logging.Formatter):
         BOLD: BOLD_FONT + FORMAT + RESET,
         logging.NOTSET: CYAN + FORMAT + RESET,
     }
-    
+
     def format(self, record):
         log_fmt = self.FORMATS.get(record.levelno)
         formatter = logging.Formatter(log_fmt, datefmt=self.DATE_FORMAT)
@@ -66,7 +66,7 @@ def color_print(text: str, color: str = RESET, fmt: bool = False, lvl: str = "LO
     Possible values for is as follows:
     ['red', 'green', 'yellow', 'blue', 'pink', 'cyan', 'gray', 'black', 'dark red', 'dark green', 'dark yellow', 'dark blue', 'dark pink', 'dark cyan', 'bright black']
     """
-    
+
     possible_colors = {
         'red': RED, 'green': GREEN, 'yellow': YELLOW, 'blue': BLUE, 'pink': PINK,
         'cyan': CYAN, 'gray': GRAY, 'black': BLACK, 'bold': BOLD_FONT,
@@ -75,20 +75,27 @@ def color_print(text: str, color: str = RESET, fmt: bool = False, lvl: str = "LO
         'dark cyan': DARK_CYAN, 'bright black': BRIGHT_BLACK
     }
     color = color.lower()
-    out_text: str = f'{text}{RESET}'
+    out_text: str = text
+    if color in possible_colors:
+        color = possible_colors[color]
+        out_text = f"{color}{text}"
     if fmt:
+        # has a bug, when we have '%' in string. need to be fixed
+        out_text = f"{color}"
         now = datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
         frame = currentframe()
-        out_text = f'{lvl}    {now}, File "{__file__.split("/")[-1]}", Func "{frame.f_code.co_name}", msg: {out_text}'
-    if color in possible_colors:
-        out_text = f"{possible_colors[color]}{out_text}"
-    # print(out_text)
-    # sys.stdout.write(out_text)
-    sys.stderr.write(out_text + "\n")
+        line = f'{frame.f_back.f_lineno}'
+        fn = f'{sys._getframe().f_back.f_code.co_name}'
+        out_text += f'{lvl}    {now}, File "%s", Line {line}, in "{fn}", msg: {text}'
+        file = f'{UNDERLINE}{stack()[1].filename.split("/")[-1]}{RESET}{color}'
+        out_text = out_text % file
+    out_text += RESET
+    out_text += "\n"
+    sys.stderr.write(out_text)
 
 
 class CustomLogger(logging.Logger):
-    
+
     def __init__(
             self,
             name: str,
@@ -98,9 +105,9 @@ class CustomLogger(logging.Logger):
             mode: str = 'a'
     ):
         super(CustomLogger, self).__init__(name, level)
-        
+
         self.setLevel(level=level)
-        
+
         if file:
             handler = logging.FileHandler(filename=filename, mode=mode)
             handler.setLevel(level=level)
@@ -109,25 +116,25 @@ class CustomLogger(logging.Logger):
             handler = logging.StreamHandler()
             handler.setLevel(level)
             handler.setFormatter(ColorfulLogging())
-        
+
         self.addHandler(handler)
-    
+
     def success(self, msg, *args, **kwargs):
         if self.isEnabledFor(SUCCESS):
             self._log(SUCCESS, msg, args, **kwargs)
-    
+
     def say(self, msg, *args, **kwargs):
         if self.isEnabledFor(SAY):
             self._log(SAY, msg, args, **kwargs)
-    
+
     def acknowledge(self, msg, *args, **kwargs):
         if self.isEnabledFor(ACKNOWLEDGE):
             self._log(ACKNOWLEDGE, msg, args, **kwargs)
-    
+
     def simple(self, msg, *args, **kwargs):
         if self.isEnabledFor(LOG):
             self._log(LOG, msg, args, **kwargs)
-    
+
     def bold(self, msg, *args, **kwargs):
         if self.isEnabledFor(BOLD):
             self._log(BOLD, msg, args, **kwargs)
