@@ -25,3 +25,13 @@ color_print(
 # here also you can use it without formatting the line: 
 color_print('ali is good', 'bold')
 ```
+
+## To get specific color:
+```python
+from colorful_logging import _get_color_
+
+c = _get_color_("dark blue")
+r = _get_color_("reset")
+
+text = f"hello {c}Ali{}"
+```

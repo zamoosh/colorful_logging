@@ -1,4 +1,5 @@
 from inspect import currentframe, stack
+from typing import Any
 import logging
 import datetime
 import sys
@@ -39,7 +40,8 @@ possible_colors = {
     'cyan': CYAN, 'gray': GRAY, 'black': BLACK, 'bold': BOLD_FONT,
     'dark red': DARK_RED, 'dark green': DARK_GREEN, 'dark yellow': DARK_YELLOW,
     'dark blue': DARK_BLUE, 'dark pink': DARK_PINK,
-    'dark cyan': DARK_CYAN, 'bright black': BRIGHT_BLACK
+    'dark cyan': DARK_CYAN, 'bright black': BRIGHT_BLACK,
+    'reset': RESET, 'underline': UNDERLINE
 }
 
 
@@ -96,7 +98,7 @@ def color_print(text: str, color: str = RESET, fmt: bool = False, lvl: str = "LO
     sys.stderr.write(out_text)
 
 
-def _get_color_(color: str) -> str:
+def get_color(color: str) -> str:
     """
     Get the color from possible colors:
     Possible values for is as follows:
@@ -105,12 +107,26 @@ def _get_color_(color: str) -> str:
     Parameters
     ----------
     color: str
-        - color name
+        - color name or color value
     """
 
     global possible_colors
 
+    if color in possible_colors.values():
+        return color
+    if color not in possible_colors:
+        raise ValueError("Invalid color name")
+
     return possible_colors[color.lower()]
+
+
+def colorize(color: str, elem: Any) -> str:
+    """
+    Colorize the element and return it as string. you must print it to see the color.
+    """
+
+    c = get_color(color)
+    return f'{c}{elem.__str__()}{RESET}'
 
 
 class CustomLogger(logging.Logger):
