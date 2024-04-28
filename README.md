@@ -28,10 +28,22 @@ color_print('ali is good', 'bold')
 
 ## To get specific color:
 ```python
-from colorful_logging import _get_color_
+from colorful_logging import get_color
 
-c = _get_color_("dark blue")
-r = _get_color_("reset")
+c = get_color("dark blue")
+r = get_color("reset")
 
-text = f"hello {c}Ali{}"
+text = f"hello {c}Ali{r}"
+print(text)
+```
+
+## You can also colorize you object:
+```python
+from colorful_logging import colorize
+
+p = Person(name="ali", age=18)
+
+colorized_elem = colorize("pink", p)
+
+print(f"hello {colorized_elem}")
 ```
