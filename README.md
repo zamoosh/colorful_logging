@@ -1,7 +1,7 @@
 # This is just a simple library to print colorful using sys.stderr to write.
 
 ```python
-from colorful_logging import color_print
+from colorful_logging.colorful_logging import color_print
 
 # color_print(
 # text: str = your text
@@ -27,8 +27,9 @@ color_print('ali is good', 'bold')
 ```
 
 ## To get specific color:
+
 ```python
-from colorful_logging import get_color
+from colorful_logging.colorful_logging import get_color
 
 c = get_color("dark blue")
 r = get_color("reset")
@@ -38,8 +39,9 @@ print(text)
 ```
 
 ## You can also colorize you object:
+
 ```python
-from colorful_logging import colorize
+from colorful_logging.colorful_logging import colorize
 
 p = Person(name="ali", age=18)
 
