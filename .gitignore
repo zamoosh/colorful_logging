@@ -1,4 +1,7 @@
 token.txt
 .idea
 venv/
+dist/
+*egg-info*
+build/
 .env

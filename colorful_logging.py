@@ -34,6 +34,14 @@ PINK = '\033[95m'
 CYAN = '\033[96m'
 BOLD_FONT = '\033[97m'
 
+possible_colors = {
+    'red': RED, 'green': GREEN, 'yellow': YELLOW, 'blue': BLUE, 'pink': PINK,
+    'cyan': CYAN, 'gray': GRAY, 'black': BLACK, 'bold': BOLD_FONT,
+    'dark red': DARK_RED, 'dark green': DARK_GREEN, 'dark yellow': DARK_YELLOW,
+    'dark blue': DARK_BLUE, 'dark pink': DARK_PINK,
+    'dark cyan': DARK_CYAN, 'bright black': BRIGHT_BLACK
+}
+
 
 class ColorfulLogging(logging.Formatter):
     FORMAT = "%(levelname) -10s %(asctime)s %(module)s:%(lineno)s, func: '%(funcName)s', msg: '%(message)s'"
@@ -66,14 +74,8 @@ def color_print(text: str, color: str = RESET, fmt: bool = False, lvl: str = "LO
     Possible values for is as follows:
     ['red', 'green', 'yellow', 'blue', 'pink', 'cyan', 'gray', 'black', 'dark red', 'dark green', 'dark yellow', 'dark blue', 'dark pink', 'dark cyan', 'bright black']
     """
+    global possible_colors
 
-    possible_colors = {
-        'red': RED, 'green': GREEN, 'yellow': YELLOW, 'blue': BLUE, 'pink': PINK,
-        'cyan': CYAN, 'gray': GRAY, 'black': BLACK, 'bold': BOLD_FONT,
-        'dark red': DARK_RED, 'dark green': DARK_GREEN, 'dark yellow': DARK_YELLOW,
-        'dark blue': DARK_BLUE, 'dark pink': DARK_PINK,
-        'dark cyan': DARK_CYAN, 'bright black': BRIGHT_BLACK
-    }
     color = color.lower()
     out_text: str = text
     if color in possible_colors:
@@ -92,6 +94,23 @@ def color_print(text: str, color: str = RESET, fmt: bool = False, lvl: str = "LO
     out_text += RESET
     out_text += "\n"
     sys.stderr.write(out_text)
+
+
+def _get_color_(color: str) -> str:
+    """
+    Get the color from possible colors:
+    Possible values for is as follows:
+    ['red', 'green', 'yellow', 'blue', 'pink', 'cyan', 'gray', 'black', 'dark red', 'dark green', 'dark yellow', 'dark blue', 'dark pink', 'dark cyan', 'bright black']
+
+    Parameters
+    ----------
+    color: str
+        - color name
+    """
+
+    global possible_colors
+
+    return possible_colors[color.lower()]
 
 
 class CustomLogger(logging.Logger):
