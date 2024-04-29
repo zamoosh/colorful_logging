@@ -1,29 +1,34 @@
 # This is just a simple library to print colorful using sys.stderr to write.
 
 ```python
-from colorful_logging.colorful_logging import color_print
+from colorful_logging.colorful_logging import color_print, c_print
 
-# color_print(
-# text: str = your text
-# color: str = 'red', 'blue', ...
-# fmt: bool = True or False
-# lvl: str -> it's just a simple naming when using the "fmt=True"
-# )
+# color_print(*values: tuple[Any, ...])
+# c_print(*values: tuple[Any, ...])
+# ['red', 'green', 'yellow', 'blue', 'pink', 'cyan', 'gray', 'black', 'dark red', 'dark green', 'dark yellow', 'dark blue', 'dark pink', 'dark cyan', 'bright black', 'underline']
 
+l = [1, 2, 3]
 
-# for example:
-color_print(
-    text='ali is good',
-    color='cyan',
-    fmt=True,
-    lvl='ALI LEVEL'
-)
+# === FOR EXAMPLE === #
+
+color_print('ali is good', l, 'cyan')
 # will produce (with colored text): 
-# ALI LEVEL    24-02-06 18:49:15, File "where the color print executed", Line 1, in "the module", msg: ali is good
+# ali is good [1, 2, 3]
 
 
-# here also you can use it without formatting the line: 
-color_print('ali is good', 'bold')
+c_print(l, 'sample text', 'green')
+# will produce (with colored text): 
+# [1, 2, 3] sample text
+```
+
+### If your input color not found, function will print the color name. for example:
+
+```python
+from colorful_logging.colorful_logging import color_print, c_print
+
+color_print('ali is good', 'cyann')
+# will produce
+# ali is good cyann
 ```
 
 ## To get specific color:
@@ -49,3 +54,10 @@ colorized_elem = colorize("pink", p)
 
 print(f"hello {colorized_elem}")
 ```
+
+## Possible colors:
+
+```
+['red', 'green', 'yellow', 'blue', 'pink', 'cyan', 'gray', 'black', 'dark red', 'dark green', 'dark yellow', 'dark blue', 'dark pink', 'dark cyan', 'bright black', 'underline']
+```
+

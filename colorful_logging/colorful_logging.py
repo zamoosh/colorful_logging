@@ -71,31 +71,67 @@ class ColorfulLogging(logging.Formatter):
         return formatter.format(record)
 
 
-def color_print(text: str, color: str = RESET, fmt: bool = False, lvl: str = "LOG") -> None:
+# def color_print(text: str, color: str = RESET, fmt: bool = False, lvl: str = "LOG") -> None:
+#     """
+#     Possible values for is as follows:
+#     ['red', 'green', 'yellow', 'blue', 'pink', 'cyan', 'gray', 'black', 'dark red', 'dark green', 'dark yellow', 'dark blue', 'dark pink', 'dark cyan', 'bright black']
+#     """
+#     global possible_colors
+#
+#     color = color.lower()
+#     out_text: str = text
+#     if color in possible_colors:
+#         color = possible_colors[color]
+#         out_text = f"{color}{text}"
+#     if fmt:
+#         # has a bug, when we have '%' in string. need to be fixed
+#         out_text = f"{color}"
+#         now = datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
+#         frame = currentframe()
+#         line = f'{frame.f_back.f_lineno}'
+#         fn = f'{sys._getframe().f_back.f_code.co_name}'
+#         out_text += f'{lvl}    {now}, File "%s", Line {line}, in "{fn}", msg: {text}'
+#         file = f'{UNDERLINE}{stack()[1].filename.split("/")[-1]}{RESET}{color}'
+#         out_text = out_text % file
+#     out_text += RESET
+#     out_text += "\n"
+#     sys.stderr.write(out_text)
+
+
+def color_print(*values):
+    c_print(*values)
+
+
+def c_print(*values):
     """
+    Just like print in python, you can pass it any object.
+    Note that the last item on values, should be a color_name, otherwise, it will simply print it.
+
+
     Possible values for is as follows:
-    ['red', 'green', 'yellow', 'blue', 'pink', 'cyan', 'gray', 'black', 'dark red', 'dark green', 'dark yellow', 'dark blue', 'dark pink', 'dark cyan', 'bright black']
+    ['red', 'green', 'yellow', 'blue', 'pink', 'cyan', 'gray', 'black', 'dark red', 'dark green', 'dark yellow', 'dark blue', 'dark pink', 'dark cyan', 'bright black', 'underline']
     """
+
     global possible_colors
 
-    color = color.lower()
-    out_text: str = text
+    items = list(values)
+    color = items[-1]
     if color in possible_colors:
         color = possible_colors[color]
-        out_text = f"{color}{text}"
-    if fmt:
-        # has a bug, when we have '%' in string. need to be fixed
-        out_text = f"{color}"
-        now = datetime.datetime.now().strftime('%y-%m-%d %H:%M:%S')
-        frame = currentframe()
-        line = f'{frame.f_back.f_lineno}'
-        fn = f'{sys._getframe().f_back.f_code.co_name}'
-        out_text += f'{lvl}    {now}, File "%s", Line {line}, in "{fn}", msg: {text}'
-        file = f'{UNDERLINE}{stack()[1].filename.split("/")[-1]}{RESET}{color}'
-        out_text = out_text % file
-    out_text += RESET
-    out_text += "\n"
-    sys.stderr.write(out_text)
+        items.pop()
+    else:
+        color = ""
+
+    final_text = ""
+    for i in items:
+        final_text += str(i)
+        final_text += " "
+
+    final_text = final_text[:len(final_text) - 1]
+    final_text = color + final_text + get_color("reset")
+    print(final_text)
+
+    return
 
 
 def get_color(color: str) -> str:

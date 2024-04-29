@@ -6,7 +6,7 @@ with open('README.md', 'r', encoding='utf-8') as file:
 
 setup(
     name='colorful_logging',
-    version='0.8',
+    version='0.9',
     packages=['colorful_logging'],
     install_requires=[],
     url='https://github.com/zamoosh/colorful_logging',
